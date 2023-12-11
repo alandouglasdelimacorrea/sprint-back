@@ -34,7 +34,6 @@ class TaskController extends Controller
         $task = new Task([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'progress' => $request->input('progress'),
             'points' => $request->input('points'),
             'status' => $request->input('status'),
             'open' => $request->input('open'),

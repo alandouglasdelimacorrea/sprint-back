@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('backlogs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
-            $table->text('status');
-
+            $table->text('description')->nullable();
+            $table->text('status')->nullable();
+            $table->date('prevision')->nullable();
             $table->timestamps();
         });
     }

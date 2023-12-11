@@ -39,7 +39,11 @@ class UserController extends Controller
 
             return response()->json($system);
         }
-        $user->load('systems');
+        $user->load('systems', 'time_entries');
+
+        if ($name = request()->get('name')) {
+            $user->systems()->where('name', 'like', "$name%")->get();
+        }
 
         return response()->json($user);
     }

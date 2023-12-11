@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\System;
+use Carbon\Carbon;
 
 
 
@@ -16,10 +17,9 @@ class SystemController extends Controller
     {
         $query = System::query();
 
-        if ($latest = request()->get('latest')) {
-            $system = System::latest()->take(4)->get();
-            return response()->json($system);
-        }
+        // if ($name = request()->get('name')) {
+        //     $query->where('name', 'like', "$name%");
+        // }
 
         $models = $query->paginate(10);
 
@@ -47,7 +47,32 @@ class SystemController extends Controller
      */
     public function show(string $id)
     {
-        $system = System::findOrFail($id);
+        $system = System::with('backlogs.tasks')->findOrFail($id);
+
+
+
+        // if ($name = request()->get('name')) {
+        //     $system->where('name', 'like', "$name%");
+        // }
+
+        if($prevision = request()->get('sprint')){
+
+            error_log('prevision');
+
+            $start = Carbon::now('America/Sao_Paulo')->startOfWeek();
+
+            $end = Carbon::now('America/Sao_Paulo')->endOfWeek();
+
+            $response = $system->backlogs()
+                ->whereBetween('prevision', [$start, $end])
+                ->get()->groupBy( function($date){
+                    return Carbon::parse($date->prevision)->format('Y-m-d');
+                });
+
+
+            return response()->json($response);
+        }
+
         $system->load('backlogs.tasks.time_entries');
 
         return response()->json($system);

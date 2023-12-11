@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->group( function(){
     Route::apiResource('/chamados', BacklogController::class);
     Route::apiResource('/chamados/tarefas', TaskController::class);
     Route::apiResource('backlogs.tasks', TaskController::class)->only(['store']);
+    Route::apiResource('/apontamentos', TimeEntryController::class);
 
     Route::apiResource('/projetos', SystemController::class);
 
@@ -46,7 +47,6 @@ Route::middleware('auth:sanctum')->group( function(){
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/user', [UserController::class, 'store']);
 Route::get('/teste', [UserController::class, 'teste']);
-Route::apiResource('/apontamentos', [TimeEntryController::class]);
 
 
 

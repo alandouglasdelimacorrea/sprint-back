@@ -16,9 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('status');
-            $table->integer('points');
-            $table->integer('progress');
-            $table->boolean('open');
+            $table->integer('points')->nullable();
+            $table->boolean('open')->nullable();
             $table->foreignId('backlog_id')->nullable()->constrained('backlogs')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();

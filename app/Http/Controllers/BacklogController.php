@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Backlog;
+use Carbon\Carbon;
 
 
 class BacklogController extends Controller
@@ -19,7 +20,7 @@ class BacklogController extends Controller
         $query->with('tasks');
 
 
-        $models = $query->paginate(10);
+        // $models = $query->paginate(10);
 
         return response()->json($models);
     }
@@ -49,7 +50,7 @@ class BacklogController extends Controller
     {
         $backlog = Backlog::findOrFail($id);
 
-        $backlog->load('tasks');
+        $backlog->load('tasks.time_entries');
 
         return response()->json($backlog);
     }

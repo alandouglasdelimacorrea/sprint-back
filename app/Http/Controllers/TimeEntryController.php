@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TimeEntry;
+use App\Models\Task;
+use App\Models\User;
+
+
 
 
 class TimeEntryController extends Controller
@@ -21,11 +25,18 @@ class TimeEntryController extends Controller
      */
     public function store(Request $request)
     {
-        $entry = new TimeEntry();
 
-        error_log($request->all());
+        $entry = new TimeEntry([
+            'total_time' => $request->total_time,
+            'time_milissec' => $request->time_milissec
+        ]);
 
-        $entry->fill($request->all());
+        $user = User::find($request->user_id);
+        $task = Task::find($request->task_id);
+
+        $entry->task()->associate($task);
+        $entry->user()->associate($user);
+
 
         if($entry->save()){
             return response()->json($entry);
@@ -56,7 +67,14 @@ class TimeEntryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $entry = TimeEntry::findOrFail($id);
+
+        $entry->fill($request->all());
+
+        if($entry->save()){
+            return response()->json($entry);
+        }
+        abort(500, 'Erro ao salvar');
     }
 
     /**
